@@ -1,0 +1,25 @@
+# Don't change this.. Default Vagrant configuration to define API version.
+VAGRANTFILE_API_VERSION = "2"
+
+# Define how many instances of the VM you want to start.
+$num_instances = 1
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+	(1..$num_instances).each do |i|
+	  # Name the virtual machine started with VirtualBox "openSuSE13-#n".. 
+	  config.vm.define "openSuSE13-#{i}" do |suse|
+	    suse.vm.box = "chef/opensuse-13.1"
+	    # Echo post up message after "vagrant up" is completed
+		suse.vm.post_up_message = "Vagrantfile built by phisig2229 (https://github.com/phisig2229/vagrantfiles)"
+		# Uncomment the below line to install Dockere
+		suse.ssh.shell = "bash -c 'BASH_ENV=/etc/profile exec bash'"
+		suse.vm.provision :shell, :inline => "sudo zypper ar -f http://download.opensuse.org/repositories/Virtualization/openSUSE_13.1/ Virtualization > /dev/null 2>&1"
+		suse.vm.provision :shell, :inline => "sudo rpm --import http://download.opensuse.org/repositories/Virtualization/openSUSE_13.1/repodata/repomd.xml.key > /dev/null 2>&1"
+		suse.vm.provision :shell, :inline => "sudo zypper --non-interactive in docker > /dev/null 2>&1"
+		suse.vm.provision :shell, :inline => "sudo /usr/sbin/usermod -a -G docker vagrant > /dev/null 2>&1"
+		suse.vm.provision :shell, :inline => "sudo systemctl enable docker > /dev/null 2>&1"
+		suse.vm.provision :shell, :inline => "sudo systemctl start docker > /dev/null 2>&1"
+		suse.vm.provision :shell, :inline => "sudo docker version > /dev/null 2>&1"
+	  end
+	end
+end
