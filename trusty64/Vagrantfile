@@ -4,15 +4,30 @@ VAGRANTFILE_API_VERSION = "2"
 # Define how many instances of the VM you want to start.
 $num_instances = 1
 
+# Define Virtualbox VM size
+$vb_memory = 2048
+$vb_cpus = 2
+
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 	(1..$num_instances).each do |i|
+	  
 	  # Name the virtual machine started with VirtualBox "trusty64-#n".. 
 	  config.vm.define "trusty64-#{i}" do |t64|
+	 	
 	 	# Provision an Ubuntu 14.04 LTS 64-bit (Trusty Tahr) latest image from the Office Ubuntu Vagrant Cloud Repo (https://vagrantcloud.com/ubuntu/boxes/trusty64)
 	    t64.vm.box = "ubuntu/trusty64"
+	    
+	    t64.vm.provider "virtualbox" do |v|
+	    	v.memory = $vb_memory
+	    	v.cpus = $vb_cpus
+	    end
+
 	    # Echo post up message after "vagrant up" is completed
 		t64.vm.post_up_message = "Vagrantfile built by phisig2229 (https://github.com/phisig2229/vagrantfiles)"
-		# Uncomment the below line to install Dockere
+		
+		#t64.vm.network :forwarded_port, guest:8080, host: 8080
+
+		# Uncomment the below line to install Docker
 		t64.ssh.shell = "bash -c 'BASH_ENV=/etc/profile exec bash'"
 		t64.vm.provision :shell, :inline => "curl -sSL https://get.docker.io/ubuntu/ | sudo sh > /dev/null 2>&1"
 		t64.vm.provision :shell, :inline => "sudo usermod -a -G docker vagrant"
