@@ -4,6 +4,10 @@ VAGRANTFILE_API_VERSION = "2"
 # Define how many instances of the VM you want to start.
 $num_instances = 1
 
+# Define Virtualbox VM size
+$vb_memory = 2048
+$vb_cpus = 2
+
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 	(1..$num_instances).each do |i|
 	  # Name the virtual machine started with VirtualBox "openSuSE13-#n".. 
@@ -11,6 +15,12 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 	    suse.vm.box = "chef/opensuse-13.1"
 	    # Echo post up message after "vagrant up" is completed
 		suse.vm.post_up_message = "Vagrantfile built by phisig2229 (https://github.com/phisig2229/vagrantfiles)"
+
+	    suse.vm.provider "virtualbox" do |v|
+	    	v.memory = $vb_memory
+	    	v.cpus = $vb_cpus
+	    end
+
 		# Uncomment the below line to install Dockere
 		suse.ssh.shell = "bash -c 'BASH_ENV=/etc/profile exec bash'"
 		suse.vm.provision :shell, :inline => "sudo zypper ar -f http://download.opensuse.org/repositories/Virtualization/openSUSE_13.1/ Virtualization > /dev/null 2>&1"
