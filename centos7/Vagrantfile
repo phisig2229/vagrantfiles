@@ -11,22 +11,28 @@ $vb_cpus = 2
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 	(1..$num_instances).each do |i|
 
-		  # Name the virtual machine started with VirtualBox "CentOS7".. just playing around here so I don't see default as the name. :)
-		  config.vm.define "centos7-#{i}" do |cos7|
+		# Name the virtual machine started with VirtualBox "CentOS7".. just playing around here so I don't see default as the name. :)
+		config.vm.define "centos7-#{i}" do |cos7|
 
-		 	# Provision a CentOS 7.0 latest image from the Chef Vagrant Cloud Repo (https://vagrantcloud.com/chef/boxes/centos-7.0)
-		  cos7.vm.box = "chef/centos-7.0"
+		# Provision a CentOS 7.0 latest image from the Chef Vagrant Cloud Repo (https://vagrantcloud.com/chef/boxes/centos-7.0)
+		cos7.vm.box = "chef/centos-7.0"
 
-	   cos7.vm.provider "virtualbox" do |v|
-	   	v.memory = $vb_memory
-	   	v.cpus = $vb_cpus
-	   end
-
-		  # Echo post up message after "vagrant up" is completed
-			cos7.vm.post_up_message = "Vagrantfile built by phisig2229 (https://github.com/phisig2229)"
-
-			# Install latest Docker version
-			#cos7.vm.provision "docker"
+		# Specify the Memory and CPU settings for Virtualbox
+		cos7.vm.provider "virtualbox" do |v|
+			v.memory = $vb_memory
+			v.cpus = $vb_cpus
 		end
- end
+
+		# Echo post up message after "vagrant up" is completed
+		cos7.vm.post_up_message = "Vagrantfile built by phisig2229 (https://github.com/phisig2229)"
+
+		# Install latest Docker binaries
+                cos7.vm.provision :shell, :inline => "cd /usr/bin/ && sudo wget https://get.docker.com/builds/Linux/x86_64/docker-latest -O docker > /dev/null 2>&1 "
+                cos7.vm.provision :shell, :inline => "sudo chmod +x /usr/bin/docker"
+		cos7.vm.provision :shell, :inline => "sudo groupadd docker"
+		cos7.vm.provision :shell, :inline => "sudo usermod -a -G docker vagrant"
+                cos7.vm.provision :shell, :inline => "sudo /usr/bin/docker -d &"
+
+		end
+	end
 end
