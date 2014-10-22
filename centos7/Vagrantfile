@@ -24,7 +24,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 		end
 
 		# Echo post up message after "vagrant up" is completed
-		cos7.vm.post_up_message = "Vagrantfile built by phisig2229 (https://github.com/phisig2229)"
+		cos7.vm.post_up_message = "Vagrantfile built by phisig2229 (https://github.com/phisig2229/vagrantfiles)"
 
 		# Install latest Docker binaries
                 cos7.vm.provision :shell, :inline => "cd /usr/bin/ && sudo wget https://get.docker.com/builds/Linux/x86_64/docker-latest -O docker > /dev/null 2>&1 "
