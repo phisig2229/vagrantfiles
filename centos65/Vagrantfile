@@ -27,14 +27,14 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 		cos65.vm.post_up_message = "Vagrantfile built by phisig2229 (https://github.com/phisig2229/vagrantfiles)"
 
 		# Install latest Docker binaries
-                cos65.vm.provision :shell, :inline => "cd /usr/bin/ && sudo wget https://get.docker.com/builds/Linux/x86_64/docker-latest -O docker > /dev/null 2>&1 "
-                cos65.vm.provision :shell, :inline => "sudo chmod +x /usr/bin/docker"
-				cos65.vm.provision :shell, :inline => "sudo groupadd docker"
-				cos65.vm.provision :shell, :inline => "sudo usermod -a -G docker vagrant"
-                cos65.vm.provision :shell, :inline => "sudo /usr/bin/docker -d &"
+		cos65.vm.provision :shell, :inline => "cd /usr/bin/ && sudo wget https://get.docker.com/builds/Linux/x86_64/docker-latest -O docker > /dev/null 2>&1 "
+		cos65.vm.provision :shell, :inline => "sudo chmod +x /usr/bin/docker"
+		cos65.vm.provision :shell, :inline => "sudo groupadd docker"
+		cos65.vm.provision :shell, :inline => "sudo usermod -a -G docker vagrant"
+		cos65.vm.provision :shell, :inline => "sudo /usr/bin/docker -d &"
 
-        # Install docker from provided repo
-        #cos65.vm.provision "docker"
+		# Install docker from provided repo
+		#cos65.vm.provision "docker"
 
 		end
 	end
